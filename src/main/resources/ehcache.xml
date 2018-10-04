@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd"
+         updateCheck="false">
+    <defaultCache
+            eternal="false"
+            maxElementsInMemory="1000"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="600"
+            memoryStoreEvictionPolicy="LRU" />
+
+
+
+    <!--
+    maxElementsInMemory ：cache 中最多可以存放的元素的数量。
+    如果放入cache中的元素超过这个数值，有两种情况：
+    1、若overflowToDisk的属性值为true，会将cache中多出的元素放入磁盘文件中。
+    2、若overflowToDisk的属性值为false，
+    会根据memoryStoreEvictionPolicy的策略替换cache中原有的元素。
+    eternal:意思是是否永驻内存
+    -->
+    <cache
+            name="customer"
+            eternal="false"
+            maxElementsInMemory="100000"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="300"
+            memoryStoreEvictionPolicy="LRU" />
+</ehcache>
