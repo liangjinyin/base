@@ -39,4 +39,6 @@ public interface LoggerDao extends BaseDao<LoggerInfo, Integer> {
             value = "SELECT a.id,a.username,a.url,a.`time`,a.log_time,a.params FROM sys_log a " +
                     " WHERE DATE_FORMAT(a.log_time,'%Y%m%d')  BETWEEN :#{#log.startDate} AND :#{#log.endDate} ")
     List<LoggerInfo>  findLogRankingByTime(@Param("log")LogQuery logQuery);
+
+
 }

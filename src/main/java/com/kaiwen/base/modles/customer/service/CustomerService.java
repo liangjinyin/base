@@ -77,18 +77,28 @@ public class CustomerService extends CrudService<CustomerDao, Customer> {
             Cache cache = CacheManager.create().getCache("customer");
 //            List<Element> collect = list.stream().map(e -> {
 //                Element element = new Element(e.getId(), e.toString());
-//                return element;
+//                return element;e
 //            }).collect(Collectors.toList());
 //            cache.putAll(collect);
             pool = new ForkJoinPool(20);
-            pool.submit(() ->list.stream().parallel().forEach(e -> cache.put(new Element(e.getId(), JSON.toJSONString(e)))));
+            pool.submit(() -> list.stream().parallel().forEach(e -> cache.put(new Element(e.getId(), JSON.toJSONString(e)))));
             return ResultCode.OPERATION_SUCCESSED;
         } catch (Exception e) {
             e.printStackTrace();
             log.error("{} 类出现了异常，异常信息为：{}", getClass().getSimpleName(), e.getMessage());
             return ResultCode.OPERATION_FAILED;
-        }finally {
+        } finally {
             pool.shutdown();
+        }
+    }
+    public Object findDate(String name) {
+        try {
+            list = super.dao.findDate(name);
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("{} 类出现了异常，异常信息为：{}",getClass().getSimpleName(),e.getMessage());
+            return ResultCode.OPERATION_FAILED;
         }
     }
 }

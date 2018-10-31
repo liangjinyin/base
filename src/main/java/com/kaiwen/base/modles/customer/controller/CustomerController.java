@@ -7,6 +7,7 @@ import com.kaiwen.base.common.enums.ResultCode;
 import com.kaiwen.base.common.utils.excel.ExportExcel;
 import com.kaiwen.base.modles.customer.entity.Customer;
 import com.kaiwen.base.modles.customer.service.CustomerService;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,6 +40,7 @@ public class CustomerController extends BaseController {
         data = customerService.findAll();
         return result();
     }
+
     @GetMapping("/ehchace")
     public String chaceCustomer() {
         data = customerService.chaceCustomer();
@@ -66,8 +68,8 @@ public class CustomerController extends BaseController {
         return result();
     }
 
-
-
+    @ApiOperation(value = "根据id查询学生信息", notes = "查询数据库中某个的学生信息")
+    @ApiImplicitParam(name = "id", value = "学生ID", paramType = "path", required = true, dataType = "Integer")
     @GetMapping("/findPage1")
     public String findCustomerPage(Pageable pageable, PageQuery pageQuery) {
         data = customerService.findAllPageAndQuery(pageable, pageQuery);
@@ -80,12 +82,15 @@ public class CustomerController extends BaseController {
         data = customerService.findAllPage(pageable);
         return result();
     }
+
+    @ApiModelProperty(value = "id")
     @Cacheable(value = "customer", key = "#id")
     @GetMapping("/find/{id}")
     public String findById(@PathVariable("id") Integer id) {
         data = customerService.findEntityById(id);
         return result();
     }
+
     @GetMapping("/data")
     public String findData() {
         data = "haha";
@@ -111,6 +116,12 @@ public class CustomerController extends BaseController {
             resCode = ResultCode.OPERATION_FAILED;
             e.printStackTrace();
         }
+        return result();
+    }
+
+    @GetMapping("/find1")
+    public String findDate(String name) {
+        data = customerService.findDate(name);
         return result();
     }
 }

@@ -26,6 +26,7 @@ public class ExceptionAdvice {
         Map<String, Object> map = new HashMap(8);
         map.put("message", String.format("出现未知异常：%s 请联系管理员！", e.getMessage()));
         map.put("code", "999");
+        e.printStackTrace();
         log.error("【出现未知异常：{}】", e.getMessage());
         return new ResponseEntity(map, HttpStatus.INTERNAL_SERVER_ERROR);
     }
