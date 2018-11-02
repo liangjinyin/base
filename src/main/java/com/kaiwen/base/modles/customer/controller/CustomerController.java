@@ -7,6 +7,10 @@ import com.kaiwen.base.common.enums.ResultCode;
 import com.kaiwen.base.common.utils.excel.ExportExcel;
 import com.kaiwen.base.modles.customer.entity.Customer;
 import com.kaiwen.base.modles.customer.service.CustomerService;
+import com.kaiwen.base.modles.springinit.InitContextHolder;
+import com.kaiwen.base.modles.springinit.InitEnum;
+import com.kaiwen.base.modles.springinit.InitTest;
+import com.kaiwen.base.modles.springinit.InitTestAnnotation;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,8 @@ public class CustomerController extends BaseController {
 
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private InitTest initTest;
 
 
     @GetMapping("/findList")
@@ -91,9 +97,11 @@ public class CustomerController extends BaseController {
         return result();
     }
 
+    @InitTestAnnotation(value = InitEnum.TEST_B)
     @GetMapping("/data")
     public String findData() {
-        data = "haha";
+        String key = InitContextHolder.getInit();
+        data = initTest.get(key);
         return result();
     }
 

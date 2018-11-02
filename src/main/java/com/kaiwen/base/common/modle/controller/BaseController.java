@@ -22,7 +22,7 @@ import java.util.Map;
 @Slf4j
 public abstract class BaseController {
 
-    protected ResultCode resCode = ResultCode.OPERATION_SUCCESSED;
+    protected ResultCode resCode = null;
     protected Object data = null;
 
 
@@ -44,15 +44,17 @@ public abstract class BaseController {
     public String result() {
         Map<String, Object> result = new HashMap(8);
         Map<String, Object> status = new HashMap(8);
-        if (resCode == null) {
-            /**
+        /*if (resCode == null) {
+            *//**
              * 没有意义的数据
-             */
+             *//*
             resCode = ResultCode.NONE;
-        }
+        }*/
         if (data instanceof ResultCode) {
             resCode = (ResultCode) data;
             data = null;
+        }else {
+            resCode = ResultCode.OPERATION_SUCCESSED;
         }
         result.put("data", data);
         status.put("code", resCode.getResultCode());
