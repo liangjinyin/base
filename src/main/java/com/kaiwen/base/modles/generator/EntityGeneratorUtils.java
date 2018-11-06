@@ -70,6 +70,8 @@ public class EntityGeneratorUtils {
                 System.out.println("private Date "+ss+";");
             }else if(s.contains("varchar")){
                 System.out.println("private String "+ss+";");
+            }else{
+                System.out.println("private String "+ss+";");
             }
         }
     }
