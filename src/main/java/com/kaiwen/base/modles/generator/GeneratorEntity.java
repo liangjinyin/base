@@ -1,5 +1,10 @@
 package com.kaiwen.base.modles.generator;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -10,9 +15,20 @@ import java.util.regex.Pattern;
  */
 public class GeneratorEntity {
 
-    public static void printEntity(String name){
+    public static void printEntity(String name,FileWriter fw) throws IOException {
 
-        System.out.print("@Data\n" +
+        fw.write("import lombok.Data;\n" +
+                "\n" +
+                "import javax.persistence.*;\n");
+        fw.write("\n");
+        fw.write("\n");
+        fw.write("/**\n" +
+                " * @author: liangjinyin\n" +
+                " * @Date: "+ DateFormatUtils.format(new Date(),"yyyy-MM-dd")+"\n" +
+                " * @Description:\n" +
+                " */\n");
+
+        fw.write("@Data\n" +
                 "@Entity\n" +
                 "@Table(name = \"\")\n" +
                 "public class "+name+" extends BaseEntity implements Serializable {\n");
@@ -29,7 +45,7 @@ public class GeneratorEntity {
                 "  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',";
 
         String[] split = str.trim().split("\\\n");
-        System.out.print("@Id\n" + "@GeneratedValue(strategy = GenerationType.IDENTITY)\n");
+        fw.write("@Id\n" + "@GeneratedValue(strategy = GenerationType.IDENTITY)\n");
         for (String s : split) {
             String s1 = s.trim().substring(1, s.trim().length() );
             String s2 = s1.substring(0, s1.indexOf("`"));
@@ -50,25 +66,25 @@ public class GeneratorEntity {
             Matcher m1 = p1.matcher(s);
             if (m1.find()) {
                 String z = "/** %s */";
-                System.out.println(String.format(z,m1.group()));
+                fw.write(String.format(z,m1.group())+"\n");
             }
 
             //写关联属性 @Column(name = "accese_type")
             String sx = "@Column(name = \"%s\")";
-            System.out.println(String.format(sx,s2));
+            fw.write(String.format(sx,s2)+"\n");
 
             //写字段
             if(s.contains("int")){
-                System.out.println("private Integer "+ss+";");
+                fw.write("private Integer "+ss+";"+"\n");
             }else if(s.contains("date")){
-                System.out.println("private Date "+ss+";");
+                fw.write("private Date "+ss+";"+"\n");
             }else if(s.contains("varchar")){
-                System.out.println("private String "+ss+";");
+                fw.write("private String "+ss+";"+"\n");
             }else{
-                System.out.println("private String "+ss+";");
+                fw.write("private String "+ss+";"+"\n");
             }
         }
         
-        System.out.print("}");
+        fw.write("}");
     }
 }

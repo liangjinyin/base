@@ -1,5 +1,11 @@
 package com.kaiwen.base.modles.generator;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Date;
+
 /**
  * @author: liangjinyin
  * @Date: 2018-12-11
@@ -7,13 +13,34 @@ package com.kaiwen.base.modles.generator;
  */
 public class GeneratorService {
 
-    public static void printService(String name) {
-        System.out.println("@Service\n" + "@Slf4j");
-        System.out.print("public class "+name+"Service {");
-        System.out.println();
-        System.out.print("    @Autowired\n" + "    private "+name+"Repository "+name.toLowerCase()+"Repository;");
-        System.out.println();
-        System.out.print("    public Page<"+name+"> findPage(MyPage page, String key) {\n" +
+    public static void printService(String name,FileWriter fw) throws IOException{
+        fw.write("import lombok.extern.slf4j.Slf4j;\n" +
+                "import org.apache.commons.lang3.StringUtils;\n" +
+                "import org.springframework.beans.factory.annotation.Autowired;\n" +
+                "import org.springframework.stereotype.Service;\n" +
+                "import javax.persistence.criteria.*;\n" +
+                "import org.springframework.data.domain.*;\n" +
+                "import org.springframework.lang.Nullable;\n" +
+                "import org.springframework.data.jpa.domain.Specification;\n" +
+                "import org.springframework.transaction.annotation.Transactional;\n" +
+                "\n" +
+                "import java.util.ArrayList;\n" +
+                "import java.util.HashMap;\n" +
+                "import java.util.List;\n" +
+                "import java.util.Map;\n");
+
+        fw.write("/**\n" +
+                " * @author: liangjinyin\n" +
+                " * @Date: "+ DateFormatUtils.format(new Date(),"yyyy-MM-dd")+"\n" +
+                " * @Description:\n" +
+                " */\n");
+
+        fw.write("@Service\n" + "@Slf4j\n");
+        fw.write("public class "+name+"Service {");
+        fw.write("\n");
+        fw.write("    @Autowired\n" + "    private "+name+"Repository "+name.toLowerCase()+"Repository;");
+        fw.write("\n");
+        fw.write("    public Page<"+name+"> findPage(MyPage page, String key) {\n" +
                 "        try {\n" +
                 "            Specification specification = new Specification<"+name+">() {\n" +
                 "                @Nullable\n" +
@@ -38,7 +65,7 @@ public class GeneratorService {
                 "        }\n" );
             
         
-        System.out.print("    public Object find"+name+"ById(Integer id) {\n" +
+        fw.write("    public Object find"+name+"ById(Integer id) {\n" +
                 "        try {\n" +
                 "            "+name+" "+name.toLowerCase()+" = "+name.toLowerCase()+"Repository.findById(id).get();\n" +
                 "            return "+name.toLowerCase()+";\n" +
@@ -75,6 +102,6 @@ public class GeneratorService {
                 "            return ResultCode.OPERATION_FAILED;\n" +
                 "        }\n" +
                 "    }\n");
-        System.out.print("}");
+        fw.write("}");
     }
 }

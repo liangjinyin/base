@@ -1,5 +1,7 @@
 package com.kaiwen.base.modles.generator;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,32 +11,56 @@ import java.io.IOException;
  * @Date: 2018-10-31
  * @Description: 代码生成器
  */
+@Slf4j
 public class EntityGeneratorUtils {
 
     public static void main(String[] args) {
-        printMy("");
+        printMy("Customer");
+
     }
 
     private static void printMy(String name) {
-        GeneratorEntity.printEntity(name);
-        GeneratorService.printService(name);
-        GeneratorRepository.printRepository(name);
-        GeneratorController.printController(name);
+        write(name, "Entity");
+        write(name, "Service");
+        write(name, "Repository");
+        write(name, "Controller");
     }
 
-    private static void write(String name) {
+    private static void write(String name, String fileName) {
         File file = null;
         FileWriter fw = null;
-        file = new File("G:\\code\\"+name+".java");
+        if ("Entity".equals(fileName)) {
+            file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".java");
+        } else {
+            file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name + fileName + ".java");
+        }
+        log.info(file.getPath());
         try {
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            fw = new FileWriter(file);
-            fw.write("");
-            fw.flush();
 
-            System.out.println("写数据成功！");
+            File fileParent = file.getParentFile();
+            if(!fileParent.exists()){
+                fileParent.mkdirs();
+            }
+            file.createNewFile();
+            fw = new FileWriter(file);
+            switch (fileName) {
+                case "Entity":
+                    GeneratorEntity.printEntity(name, fw);
+                    break;
+                case "Service":
+                    GeneratorService.printService(name, fw);
+                    break;
+                case "Repository":
+                    GeneratorRepository.printRepository(name, fw);
+                    break;
+                case "Controller":
+                    GeneratorController.printController(name, fw);
+                    break;
+                default:
+                    break;
+            }
+            fw.flush();
+            log.info("写数据成功！");
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
