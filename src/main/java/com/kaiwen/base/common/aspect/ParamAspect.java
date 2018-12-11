@@ -41,6 +41,7 @@ public class ParamAspect {
         log.info("logRequest 请求路径:url={}, 请求参数:params={}, 执行方法耗时:times={} {}",
                 request.getRequestURI(), JSON.toJSONString(request.getParameterMap()), times, "毫秒");
         log.info("myLogs{\"url\":\"{}\",\"params\":\"{}\",\"time\":\"{}\",\"logTime\":\"{}\"} ** ", request.getRequestURI(),request.getQueryString(),times, DateUtils.getDate("yyyy-MM-dd HH:mm:ss"));
+        //log.info("myLogs{\"url\":\"{}\",\"params\":\"{}\",\"time\":\"{}\",\"logTime\":\"{}\",\"data\":\"{}\"} ** ", request.getRequestURI(),request.getQueryString(),times, DateUtils.getDate("yyyy-MM-dd HH:mm:ss"),object);
 
         return object;
     }

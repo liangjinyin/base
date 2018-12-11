@@ -9,7 +9,11 @@ import org.springframework.core.type.AnnotationMetadata;
  * @Description:
  */
 public class MyConfigurationSelector implements ImportSelector {
-
+    /**
+     *
+     * @param annotationMetadata 是启动类上面的注解
+     * @return
+     */
     @Override
     public String[] selectImports(AnnotationMetadata annotationMetadata) {
         return new String[]{MyConfigurationBean.class.getName()};

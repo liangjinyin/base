@@ -34,7 +34,6 @@ import java.util.List;
 @RequestMapping("/customer")
 public class CustomerController extends BaseController {
 
-
     @Autowired
     private CustomerService customerService;
     @Autowired
