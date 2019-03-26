@@ -12,4 +12,7 @@ import feign.RequestLine;
 public interface FeignClient {
     @RequestLine("GET /customer/data")
     Object getDate();
+
+    @RequestLine("GET /mlsdate/findList")
+    Object findMls();
 }

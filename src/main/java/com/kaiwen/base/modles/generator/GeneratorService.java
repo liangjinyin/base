@@ -62,7 +62,7 @@ public class GeneratorService {
                 "            e.printStackTrace();\n" +
                 "            log.error(\"{} 类出现了异常，异常信息为：{}\",getClass().getSimpleName(),e.getMessage());\n" +
                 "            return null;\n" +
-                "        }\n" );
+                "        }}\n" );
             
         
         fw.write("    public Object find"+name+"ById(Integer id) {\n" +

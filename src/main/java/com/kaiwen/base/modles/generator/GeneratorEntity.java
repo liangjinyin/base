@@ -35,14 +35,11 @@ public class GeneratorEntity {
 
 
         //数据库字段
-        String str = "   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id 主键',\n" +
-                "  `rank_id` varchar(32) DEFAULT NULL COMMENT '等级id',\n" +
-                "  `name` varchar(64) DEFAULT NULL COMMENT '等级名称',\n" +
-                "  `code` varchar(64) DEFAULT NULL COMMENT '等级编码',\n" +
-                "  `class_code` varchar(64) DEFAULT NULL COMMENT '类编码',\n" +
-                "  `parent_id` varchar(32) DEFAULT NULL COMMENT '上级id',\n" +
-                "  `grade` tinyint(8) DEFAULT NULL COMMENT '等级',\n" +
-                "  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',";
+        String str = "    `id` smallint(11) NOT NULL AUTO_INCREMENT,\n" +
+                "  `name` varchar(32) DEFAULT NULL COMMENT '资源名称',\n" +
+                "  `flag` smallint(1) DEFAULT NULL,\n" +
+                "  `parent_id` smallint(11) DEFAULT NULL COMMENT '上级id',\n" +
+                "  `role_id` smallint(11) DEFAULT NULL COMMENT '角色id',";
 
         String[] split = str.trim().split("\\\n");
         fw.write("@Id\n" + "@GeneratedValue(strategy = GenerationType.IDENTITY)\n");

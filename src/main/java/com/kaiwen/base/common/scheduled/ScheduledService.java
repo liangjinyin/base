@@ -12,24 +12,31 @@ import org.springframework.stereotype.Component;
  * @Description:
  */
 @Slf4j
-//@Component
+@Component
 public class ScheduledService {
 
     @Autowired
     private FeignClient feignClient;
 
-    @Scheduled(cron = "0/5 * * * * *")
+    /*@Scheduled(cron = "0 0/15 * * * ?")
     public void scheduled(){
         Object date = feignClient.getDate();
         System.out.println(date);
         log.info("=====>>>>>使用cron  {}",System.currentTimeMillis());
     }
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 1000*60*15)
     public void scheduled1() {
         log.info("=====>>>>>使用fixedRate{}", System.currentTimeMillis());
     }
     @Scheduled(fixedDelay = 5000)
     public void scheduled2() {
         log.info("=====>>>>>fixedDelay{}",System.currentTimeMillis());
+    }*/
+
+    @Scheduled(cron = "0 0/15 * * * ?")
+    public void scheduled(){
+        Object date = feignClient.findMls();
+
+        log.info("=====>>>>>使用cron  {}",System.currentTimeMillis());
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ForkJoinPool;
 
 /**
@@ -80,8 +81,14 @@ public class CustomerService extends CrudService<CustomerDao, Customer> {
 //                return element;e
 //            }).collect(Collectors.toList());
 //            cache.putAll(collect);
+            // 多个线程执行任务 使用countDownLatch
+            CountDownLatch countDownLatch = new CountDownLatch(list.size());
             pool = new ForkJoinPool(20);
-            pool.submit(() -> list.stream().parallel().forEach(e -> cache.put(new Element(e.getId(), JSON.toJSONString(e)))));
+            pool.submit(() -> {
+                list.stream().parallel().forEach(e -> cache.put(new Element(e.getId(), JSON.toJSONString(e))));
+                countDownLatch.countDown();
+            });
+            countDownLatch.await();
             return ResultCode.OPERATION_SUCCESSED;
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,13 +98,14 @@ public class CustomerService extends CrudService<CustomerDao, Customer> {
             pool.shutdown();
         }
     }
+
     public Object findDate(String name) {
         try {
             list = super.dao.findDate(name);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
-            log.error("{} 类出现了异常，异常信息为：{}",getClass().getSimpleName(),e.getMessage());
+            log.error("{} 类出现了异常，异常信息为：{}", getClass().getSimpleName(), e.getMessage());
             return ResultCode.OPERATION_FAILED;
         }
     }

@@ -15,7 +15,7 @@ import java.io.IOException;
 public class EntityGeneratorUtils {
 
     public static void main(String[] args) {
-        printMy("Customer");
+        printMy("Resource");
 
     }
 
