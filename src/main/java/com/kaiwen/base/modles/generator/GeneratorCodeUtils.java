@@ -12,34 +12,42 @@ import java.io.IOException;
  * @Description: 代码生成器
  */
 @Slf4j
-public class EntityGeneratorUtils {
+public class GeneratorCodeUtils {
 
     public static void main(String[] args) {
         printMy("Resource","资源");
     }
 
     /**
-     * {@link EntityGeneratorUtils}.
+     * {@link GeneratorCodeUtils}.
      * @param name 英文名称
      * @param cname 中文名称
      */
     private static void printMy(String name,String cname) {
-        /*write(name, "Entity",cname);
+        write(name, "Entity",cname);
         write(name, "Service",cname);
         write(name, "Repository",cname);
-        write(name, "Controller",cname);*/
-        write(name, "SQL",cname);
+        write(name, "Controller",cname);
+        /*write(name, "SQL",cname);
+        write(name, "API",cname);*/
     }
 
     private static void write(String name, String fileName,String cname) {
         File file = null;
         FileWriter fw = null;
-        if ("Entity".equals(fileName)) {
-            file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".java");
-        }else if ("SQL".equals(fileName)){
-            file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".sql");
-        } else {
-            file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name + fileName + ".java");
+        switch (fileName) {
+            case "Entity":
+                file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".java");
+                break;
+            case "API":
+                file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".txt");
+                break;
+            case "SQL":
+                file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".sql");
+                break;
+            default:
+                file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name + fileName + ".java");
+                break;
         }
         log.info(file.getPath());
         try {
@@ -65,6 +73,9 @@ public class EntityGeneratorUtils {
                     break;
                 case "SQL":
                     GeneratorSql.printSql(name, fw,cname);
+                    break;
+                case "API":
+                    GeneratorApi.printApi(name, fw,cname);
                     break;
                 default:
                     break;
