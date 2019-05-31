@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class GeneratorService {
 
-    public static void printService(String name,FileWriter fw) throws IOException{
+    public static void printService(String name,FileWriter fw,String cname) throws IOException{
         fw.write("import lombok.extern.slf4j.Slf4j;\n" +
                 "import org.apache.commons.lang3.StringUtils;\n" +
                 "import org.springframework.beans.factory.annotation.Autowired;\n" +
@@ -32,7 +32,7 @@ public class GeneratorService {
         fw.write("/**\n" +
                 " * @author: liangjinyin\n" +
                 " * @Date: "+ DateFormatUtils.format(new Date(),"yyyy-MM-dd")+"\n" +
-                " * @Description:\n" +
+                " * @Description:"+cname+" Service\n" +
                 " */\n");
 
         fw.write("@Service\n" + "@Slf4j\n");
@@ -40,6 +40,11 @@ public class GeneratorService {
         fw.write("\n");
         fw.write("    @Autowired\n" + "    private "+name+"Repository "+name.toLowerCase()+"Repository;");
         fw.write("\n");
+        fw.write("     /**\n" +
+                "     * 根据条件获取"+cname+"list\n" +
+                "     * @param pageable 页码条件\n" +
+                "     * @return "+cname+"实体类list\n" +
+                "     */\n");
         fw.write("    public Page<"+name+"> findPage(MyPage page, String key) {\n" +
                 "        try {\n" +
                 "            Specification specification = new Specification<"+name+">() {\n" +
@@ -62,9 +67,14 @@ public class GeneratorService {
                 "            e.printStackTrace();\n" +
                 "            log.error(\"{} 类出现了异常，异常信息为：{}\",getClass().getSimpleName(),e.getMessage());\n" +
                 "            return null;\n" +
-                "        }}\n" );
+                "        }\n" +
+                "   }\n" );
             
-        
+        fw.write("     /**\n" +
+                "     * 根据id获取"+cname+"\n" +
+                "     * @param id "+cname+"id\n" +
+                "     * @return "+cname+"实体类\n" +
+                "     */\n");
         fw.write("    public Object find"+name+"ById(Integer id) {\n" +
                 "        try {\n" +
                 "            "+name+" "+name.toLowerCase()+" = "+name.toLowerCase()+"Repository.findById(id).get();\n" +
@@ -76,6 +86,11 @@ public class GeneratorService {
                 "        }\n" +
                 "    }\n" +
                 "\n" +
+                "     /**\n" +
+                "     * 新增或者修改"+cname+"\n" +
+                "     * @param "+name +cname+" \n" +
+                "     * @return "+cname+"实体类\n" +
+                "     */\n"+
                 "    @Transactional(rollbackFor = Exception.class)\n" +
                 "    public Object save"+name+"("+name+" "+name.toLowerCase()+") {\n" +
                 "        try {\n" +
@@ -87,6 +102,11 @@ public class GeneratorService {
                 "        }\n" +
                 "    }\n" +
                 "\n" +
+                "     /**\n" +
+                "     * 根据id删除"+cname+"\n" +
+                "     * @param id "+cname+"id\n" +
+                "     * @return "+cname+"实体类\n" +
+                "     */\n"+
                 "    @Transactional(rollbackFor = Exception.class)\n" +
                 "    public Object delete"+name+"ById(Integer id) {\n" +
                 "        try {\n" +

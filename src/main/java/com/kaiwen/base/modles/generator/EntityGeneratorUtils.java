@@ -15,22 +15,29 @@ import java.io.IOException;
 public class EntityGeneratorUtils {
 
     public static void main(String[] args) {
-        printMy("Resource");
-
+        printMy("Resource","资源");
     }
 
-    private static void printMy(String name) {
-        write(name, "Entity");
-        write(name, "Service");
-        write(name, "Repository");
-        write(name, "Controller");
+    /**
+     * {@link EntityGeneratorUtils}.
+     * @param name 英文名称
+     * @param cname 中文名称
+     */
+    private static void printMy(String name,String cname) {
+        /*write(name, "Entity",cname);
+        write(name, "Service",cname);
+        write(name, "Repository",cname);
+        write(name, "Controller",cname);*/
+        write(name, "SQL",cname);
     }
 
-    private static void write(String name, String fileName) {
+    private static void write(String name, String fileName,String cname) {
         File file = null;
         FileWriter fw = null;
         if ("Entity".equals(fileName)) {
             file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".java");
+        }else if ("SQL".equals(fileName)){
+            file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".sql");
         } else {
             file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name + fileName + ".java");
         }
@@ -45,16 +52,19 @@ public class EntityGeneratorUtils {
             fw = new FileWriter(file);
             switch (fileName) {
                 case "Entity":
-                    GeneratorEntity.printEntity(name, fw);
+                    GeneratorEntity.printEntity(name, fw,cname);
                     break;
                 case "Service":
-                    GeneratorService.printService(name, fw);
+                    GeneratorService.printService(name, fw,cname);
                     break;
                 case "Repository":
-                    GeneratorRepository.printRepository(name, fw);
+                    GeneratorRepository.printRepository(name, fw,cname);
                     break;
                 case "Controller":
-                    GeneratorController.printController(name, fw);
+                    GeneratorController.printController(name, fw,cname);
+                    break;
+                case "SQL":
+                    GeneratorSql.printSql(name, fw,cname);
                     break;
                 default:
                     break;

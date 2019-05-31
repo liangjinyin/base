@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class GeneratorEntity {
 
-    public static void printEntity(String name,FileWriter fw) throws IOException {
+    public static void printEntity(String name,FileWriter fw,String cname) throws IOException {
 
         fw.write("import lombok.Data;\n" +
                 "\n" +
@@ -25,7 +25,7 @@ public class GeneratorEntity {
         fw.write("/**\n" +
                 " * @author: liangjinyin\n" +
                 " * @Date: "+ DateFormatUtils.format(new Date(),"yyyy-MM-dd")+"\n" +
-                " * @Description:\n" +
+                " * @Description:"+cname+" Entity\n" +
                 " */\n");
 
         fw.write("@Data\n" +
@@ -35,12 +35,19 @@ public class GeneratorEntity {
 
 
         //数据库字段
-        String str = "    `id` smallint(11) NOT NULL AUTO_INCREMENT,\n" +
-                "  `name` varchar(32) DEFAULT NULL COMMENT '资源名称',\n" +
-                "  `flag` smallint(1) DEFAULT NULL,\n" +
-                "  `parent_id` smallint(11) DEFAULT NULL COMMENT '上级id',\n" +
-                "  `role_id` smallint(11) DEFAULT NULL COMMENT '角色id',";
-
+        String str = "     `id` varchar(64) NOT NULL COMMENT '编号',\n" +
+                "  `parent_id` varchar(64) NOT NULL COMMENT '父级编号',\n" +
+                "  `parent_ids` varchar(2000) NOT NULL COMMENT '所有父级编号',\n" +
+                "  `name` varchar(100) NOT NULL COMMENT '名称',\n" +
+                "  `sort` decimal(10,0) NOT NULL COMMENT '排序',\n" +
+                "  `code` varchar(100) DEFAULT NULL COMMENT '区域编码',\n" +
+                "  `type` char(1) DEFAULT NULL COMMENT '区域类型',\n" +
+                "  `create_by` varchar(64) NOT NULL COMMENT '创建者',\n" +
+                "  `create_date` datetime NOT NULL COMMENT '创建时间',\n" +
+                "  `update_by` varchar(64) NOT NULL COMMENT '更新者',\n" +
+                "  `update_date` datetime NOT NULL COMMENT '更新时间',\n" +
+                "  `remarks` varchar(255) DEFAULT NULL COMMENT '备注信息',\n" +
+                "  `del_flag` char(1) NOT NULL DEFAULT '0' COMMENT '删除标记',";
         String[] split = str.trim().split("\\\n");
         fw.write("@Id\n" + "@GeneratedValue(strategy = GenerationType.IDENTITY)\n");
         for (String s : split) {

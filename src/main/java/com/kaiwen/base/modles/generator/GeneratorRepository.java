@@ -13,13 +13,13 @@ import java.util.Date;
  */
 public class GeneratorRepository {
 
-    public static void printRepository(String name, FileWriter fw) throws IOException{
+    public static void printRepository(String name, FileWriter fw,String cname) throws IOException{
         fw.write("import com.gpdi.keiwen.common.module.repository.BaseRepository;\n");
 
         fw.write("/**\n" +
                 " * @author: liangjinyin\n" +
                 " * @Date: "+ DateFormatUtils.format(new Date(),"yyyy-MM-dd")+"\n" +
-                " * @Description:\n" +
+                " * @Description:"+cname+" Repository\n" +
                 " */\n");
 
         fw.write("public interface "+name+"Repository extends BaseRepository<"+name+", Integer> {\n" +"}");
