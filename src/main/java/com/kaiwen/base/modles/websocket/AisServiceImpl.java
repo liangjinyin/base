@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class AisServiceImpl {
@@ -87,6 +89,7 @@ public class AisServiceImpl {
                 }
             }
             jsonObject.put("elecequipment", elecequipment); //电子定位设备类型
+            jsonObject.put("dateTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))); //记录时间
 
             return jsonObject;
         }

@@ -35,19 +35,11 @@ public class GeneratorEntity {
 
 
         //数据库字段
-        String str = "     `id` varchar(64) NOT NULL COMMENT '编号',\n" +
-                "  `parent_id` varchar(64) NOT NULL COMMENT '父级编号',\n" +
-                "  `parent_ids` varchar(2000) NOT NULL COMMENT '所有父级编号',\n" +
-                "  `name` varchar(100) NOT NULL COMMENT '名称',\n" +
-                "  `sort` decimal(10,0) NOT NULL COMMENT '排序',\n" +
-                "  `code` varchar(100) DEFAULT NULL COMMENT '区域编码',\n" +
-                "  `type` char(1) DEFAULT NULL COMMENT '区域类型',\n" +
-                "  `create_by` varchar(64) NOT NULL COMMENT '创建者',\n" +
-                "  `create_date` datetime NOT NULL COMMENT '创建时间',\n" +
-                "  `update_by` varchar(64) NOT NULL COMMENT '更新者',\n" +
-                "  `update_date` datetime NOT NULL COMMENT '更新时间',\n" +
-                "  `remarks` varchar(255) DEFAULT NULL COMMENT '备注信息',\n" +
-                "  `del_flag` char(1) NOT NULL DEFAULT '0' COMMENT '删除标记',";
+        String str = "   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增id',\n" +
+                "  `longitude` varchar(255) DEFAULT NULL COMMENT '经度',\n" +
+                "  `latitude` varchar(255) DEFAULT NULL COMMENT '纬度',\n" +
+                "  `imms` varchar(255) DEFAULT NULL COMMENT '船舶唯一id',\n" +
+                "  `data` varchar(255) DEFAULT NULL COMMENT '时间',";
         String[] split = str.trim().split("\\\n");
         fw.write("@Id\n" + "@GeneratedValue(strategy = GenerationType.IDENTITY)\n");
         for (String s : split) {

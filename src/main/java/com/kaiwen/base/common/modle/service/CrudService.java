@@ -53,7 +53,7 @@ public abstract class CrudService<D extends BaseDao, E extends BaseEntity> exten
                 //修改
                 entity = (E) dao.findById(e1.getId()).get();
                 if (entity == null) {
-                    return ResultCode.ENTIRY_NOT_EXIST;
+                    return ResultCode.ENTITY_NOT_EXIST;
                 } else {
                     MyBeanUtils.copyProperties(e1, entity);
                     return dao.save(entity);
@@ -75,7 +75,7 @@ public abstract class CrudService<D extends BaseDao, E extends BaseEntity> exten
                 dao.deleteById(id);
                 return ResultCode.OPERATION_SUCCESSED;
             } else {
-                return ResultCode.ENTIRY_NOT_EXIST;
+                return ResultCode.ENTITY_NOT_EXIST;
             }
         } catch (Exception e) {
             e.printStackTrace();

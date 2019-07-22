@@ -15,7 +15,7 @@ import java.io.IOException;
 public class GeneratorCodeUtils {
 
     public static void main(String[] args) {
-        printMy("Resource","资源");
+        printMy("Ship","船舶");
     }
 
     /**
@@ -37,16 +37,16 @@ public class GeneratorCodeUtils {
         FileWriter fw = null;
         switch (fileName) {
             case "Entity":
-                file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".java");
+                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".java");
                 break;
             case "API":
-                file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".txt");
+                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".txt");
                 break;
             case "SQL":
-                file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".sql");
+                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".sql");
                 break;
             default:
-                file = new File("G:\\code\\" + fileName.toLowerCase() + "\\" + name + fileName + ".java");
+                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name + fileName + ".java");
                 break;
         }
         log.info(file.getPath());

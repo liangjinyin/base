@@ -53,7 +53,7 @@ public enum ResultCode {
     ROLE_NAME_EXIST("602", "权限名已存在"),
     ROLE_NOTEXIST("603", "权限不存在"),
 
-    ENTIRY_NOT_EXIST("801","实体类不存在！")
+    ENTITY_NOT_EXIST("801","实体类不存在！")
     ;
 
     private String code;
