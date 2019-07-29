@@ -1,7 +1,8 @@
 package com.kaiwen.base.modles.websocket;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.kaiwen.base.common.utils.MyBeanUtils;
+import com.kaiwen.base.common.utils.HttpUtils;
 import com.kaiwen.base.common.utils.ParamUtils;
 import com.kaiwen.base.modles.ship.entity.Ship;
 import com.kaiwen.base.modles.ship.repository.ShipRepository;
@@ -15,13 +16,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.socket.TextMessage;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -164,7 +165,7 @@ public class WebSocketSchedule {
     /**
      * 终端管理平台首页，推送AIS船舶统计类信息
      */
-/*    @Scheduled(cron = "33 0/2 *  * * ? ") //每2分钟的第33秒
+    @Scheduled(cron = "33 0/2 *  * * ? ") //每2分钟的第33秒
     public void pushAisCount() throws Exception {
         Map<String, Object> map = new HashMap<>();
         // AIS 北斗定位数和其他定位数
@@ -176,7 +177,6 @@ public class WebSocketSchedule {
 
         // 高精度用户总定位数 公网播发总数
         Map<String, String> parameters = new HashMap<>();
-        List<List<Object>> collect = null;
         String result = HttpUtils.sendPost(corshttp + "/cors_station/user_list_page", parameters);
         if (!StringUtils.isEmpty(result)) {
             JSONObject jsonObject = JSONObject.parseObject(result);
@@ -187,17 +187,16 @@ public class WebSocketSchedule {
                 JSONArray rows = jsonObject.getJSONArray("rows");
                 List<Object> data = new ArrayList<>(128);
                 // 过滤没有经纬度的高精度用户数据
-                collect = rows.stream().map(e -> {
+                rows.forEach(e->{
                     JSONObject data1 = JSONObject.parseObject(e.toString());
                     if (data1.containsKey("latestPositionB") && data1.containsKey("latestPositionL")
                             && data1.containsKey("latestPositionH")) {
                         data.add(data1);
                     }
-                    return data;
-                }).collect(Collectors.toList());
+                });
             }
         }
-        Integer corsUserCount = CollectionUtils.isEmpty(collect) ? 0 : collect.get(0).size();
+        Integer corsUserCount = 0;
         map.put("corsUserCount", corsUserCount);
 
         //终端总数
@@ -206,7 +205,7 @@ public class WebSocketSchedule {
         Map<String, Object> map1 = new HashMap<>();
         map1.put("aisCountData", map);
         webSocketHandler.sendMsgToAll(new TextMessage(ParamUtils.obj2Str(map1)));
-    }*/
+    }
 
 
     /**
@@ -293,7 +292,7 @@ public class WebSocketSchedule {
     /**
      * 终端管理平台首页，船舶位置定时推送到前端
      */
-    @Scheduled(cron = "0/10 * *  * * ? ")
+    //@Scheduled(cron = "0/10 * *  * * ? ")
     public void pushAisShip() throws Exception {
         Map<String, Object> map = new HashMap<>();
         map.put("aisShip", AdapterCommon.getShipMap().values());
@@ -302,21 +301,18 @@ public class WebSocketSchedule {
         //最新的数据缓存到redis 并保存历史数据
         Map<String, Object> entries = redisTemplate.opsForHash().entries("aisShip");
         Map<String, Object> historyMap = new HashMap<>(128);
-        JSONObject localMap = new JSONObject();
+        JSONObject locationMap = new JSONObject();
         String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         if (!CollectionUtils.isEmpty(entries) && entries.size() != 0) {
             // entries.forEach((key, value) -> historyMap.put(key + "_" + format, value));
-            entries.entrySet().stream().forEach(e -> {
-                JSONObject ship = JSONObject.parseObject(e.getValue().toString());
-                String longitude = ship.getString("longitude");
-                String latitude = ship.getString("latitude");
-                localMap.put("longitude", longitude);
-                localMap.put("latitude", latitude);
-                localMap.put("imms", e.getKey());
-                localMap.put("dateTime", ship.getString("dateTime"));
-                historyMap.put(e.getKey() + "_" + format, localMap);
+            entries.forEach((key, value) -> {
+                JSONObject ship = JSONObject.parseObject(value.toString());
+                locationMap.put("imms", key);
+                locationMap.put("longitude", ship.getString("longitude"));
+                locationMap.put("latitude", ship.getString("latitude"));
+                locationMap.put("dateTime", ship.getString("dateTime"));
+                historyMap.put(key + "_" + format, locationMap);
             });
-
             redisTemplate.opsForHash().putAll("aisShipHistory", historyMap);
         }
         redisTemplate.opsForHash().putAll("aisShip", AdapterCommon.getShipMap());
@@ -328,7 +324,7 @@ public class WebSocketSchedule {
     /**
      * 从redis取船舶信息保存到数据库中
      */
-    @Scheduled(cron = "0/15 * *  * * ? ")
+    //@Scheduled(cron = "0/15 * *  * * ? ")
     public void saveAisShip() throws Exception {
         Map aisShipHistory = redisTemplate.opsForHash().entries("aisShipHistory");
         Collection values = aisShipHistory.values();
@@ -339,12 +335,12 @@ public class WebSocketSchedule {
                 try {
                     ship = ParamUtils.json2obj(e.toString(), Ship.class);
                     shipList.add(ship);
+                    shipRepository.saveAll(shipList);
+                    redisTemplate.expire("aisShipHistory", 1, TimeUnit.SECONDS);
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
             });
-            shipRepository.saveAll(shipList);
-            redisTemplate.expire("aisShipHistory", 1, TimeUnit.SECONDS);
         }
     }
 
