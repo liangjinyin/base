@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit;
  * @Class bigscreen_schedule
  * @Date 2019/6/21
  */
-@Component
+//@Component
 @Slf4j
 public class WebSocketSchedule {
 
