@@ -15,35 +15,40 @@ import java.io.IOException;
 public class GeneratorCodeUtils {
 
     public static void main(String[] args) {
-        printMy("Ship","船舶");
+        printMy("Ship", "CORS基站");
     }
 
     /**
      * {@link GeneratorCodeUtils}.
-     * @param name 英文名称
+     *
+     * @param name  英文名称
      * @param cname 中文名称
      */
-    private static void printMy(String name,String cname) {
-        write(name, "Entity",cname);
-        write(name, "Service",cname);
-        write(name, "Repository",cname);
-        write(name, "Controller",cname);
-        /*write(name, "SQL",cname);
+    private static void printMy(String name, String cname) {
+/*        write(name, "Entity", cname);
+        write(name, "Service", cname);
+        write(name, "Repository", cname);
+        write(name, "Controller", cname);
+        write(name, "MySQL",cname);
         write(name, "API",cname);*/
+        write(name, "PgSQL",cname);
     }
 
-    private static void write(String name, String fileName,String cname) {
+    private static void write(String name, String fileName, String cname) {
         File file = null;
         FileWriter fw = null;
         switch (fileName) {
             case "Entity":
-                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".java");
+                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name + ".java");
                 break;
             case "API":
-                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".txt");
+                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name + ".txt");
                 break;
-            case "SQL":
-                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name  + ".sql");
+            case "MySQL":
+                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name + ".sql");
+                break;
+            case "PgSQL":
+                file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name + ".sql");
                 break;
             default:
                 file = new File("E:\\code\\" + fileName.toLowerCase() + "\\" + name + fileName + ".java");
@@ -53,29 +58,32 @@ public class GeneratorCodeUtils {
         try {
 
             File fileParent = file.getParentFile();
-            if(!fileParent.exists()){
+            if (!fileParent.exists()) {
                 fileParent.mkdirs();
             }
             file.createNewFile();
             fw = new FileWriter(file);
             switch (fileName) {
                 case "Entity":
-                    GeneratorEntity.printEntity(name, fw,cname);
+                    GeneratorEntity.printEntity(name, fw, cname);
                     break;
                 case "Service":
-                    GeneratorService.printService(name, fw,cname);
+                    GeneratorService.printService(name, fw, cname);
                     break;
                 case "Repository":
-                    GeneratorRepository.printRepository(name, fw,cname);
+                    GeneratorRepository.printRepository(name, fw, cname);
                     break;
                 case "Controller":
-                    GeneratorController.printController(name, fw,cname);
+                    GeneratorController.printController(name, fw, cname);
                     break;
-                case "SQL":
-                    GeneratorSql.printSql(name, fw,cname);
+                case "MySQL":
+                    GeneratorMySql.printSql(name, fw, cname);
+                    break;
+                case "PgSQL":
+                    GeneratorPgSql.printSql(name, fw, cname);
                     break;
                 case "API":
-                    GeneratorApi.printApi(name, fw,cname);
+                    GeneratorApi.printApi(name, fw, cname);
                     break;
                 default:
                     break;

@@ -10,7 +10,7 @@ import java.io.IOException;
  * @Date: 2019-05-30
  * @Description: printSql
  */
-public class GeneratorSql {
+public class GeneratorMySql {
 
     public static void printSql(String name, FileWriter fw, String cname) throws IOException {
         fw.write("-  " + cname + "表，储存" + cname + "信息\n" +
@@ -20,7 +20,7 @@ public class GeneratorSql {
         );
 
         //数据库字段
-        String str = "      `id` varchar(64) NOT NULL COMMENT '编号',\n" +
+        String str = "   `id` varchar(64) NOT NULL COMMENT '编号',\n" +
                 "  `parent_id` varchar(64) NOT NULL COMMENT '父级编号',\n" +
                 "  `parent_ids` varchar(2000) NOT NULL COMMENT '所有父级编号',\n" +
                 "  `name` varchar(100) NOT NULL COMMENT '名称',\n" +
