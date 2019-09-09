@@ -1,4 +1,4 @@
-package com.kaiwen.base.modles.websocket;
+package com.kaiwen.base.modles.websocket.config;
 
 import org.springframework.beans.BeansException;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -1,5 +1,6 @@
-package com.kaiwen.base.modles.websocket;
+package com.kaiwen.base.modles.websocket.config;
 
+import com.kaiwen.base.modles.websocket.AdapterCommon;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

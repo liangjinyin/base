@@ -1,5 +1,6 @@
 package com.kaiwen.base.common.utils;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -81,7 +83,7 @@ public class HttpUtils {
             httpPost.setConfig(requestConfig);
             httpPost.addHeader("Content-type", "application/json; charset=utf-8");
             httpPost.setHeader("Accept", "application/json");
-            httpPost.setEntity(new StringEntity(jsonString, Charset.forName("UTF-8")));
+            //httpPost.setEntity(new StringEntity(jsonString, Charset.forName("UTF-8")));
             response = httpClient.execute(httpPost);
             in = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             StringBuffer sb = new StringBuffer("");
@@ -261,5 +263,14 @@ public class HttpUtils {
             }
         }
         return result.toString();
+    }
+
+    public static void main(String[] args) throws Exception{
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("bsIds", "4126689");
+        parameters.put("msg", "test");
+        parameters.put("isSendAll", "false");
+        String s = post("http://47.106.173.133:16000/api/AISInfo/SendMsg", JSON.toJSONString(parameters));
+        System.out.println(s);
     }
 }

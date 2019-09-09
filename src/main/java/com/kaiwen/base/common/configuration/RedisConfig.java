@@ -1,4 +1,4 @@
-package com.kaiwen.base.modles.websocket.redis;
+package com.kaiwen.base.common.configuration;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;

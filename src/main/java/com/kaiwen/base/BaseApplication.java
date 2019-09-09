@@ -2,9 +2,8 @@ package com.kaiwen.base;
 
 import com.kaiwen.base.modles.conguration.EnableMyConfiguration;
 import com.kaiwen.base.modles.swagger.EnableMySwagger;
-import com.kaiwen.base.modles.websocket.NettyServerListener;
+import com.kaiwen.base.modles.websocket.config.NettyServerListener;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.cache.annotation.EnableCaching;
@@ -41,6 +40,6 @@ public class BaseApplication implements CommandLineRunner{
 	//"开机启动"
 	@Override
 	public void run(String... args) throws Exception {
-		nettyServerListener.startServer();
+		//nettyServerListener.startServer();
 	}
 }

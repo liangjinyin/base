@@ -1,4 +1,4 @@
-package com.kaiwen.base.modles.websocket;
+package com.kaiwen.base.modles.websocket.common;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,28 +7,6 @@ import java.util.Map;
  * 常量
  */
 public class Constants {
-
-    public static final Integer RESULT_STATUS_SUCCESS = 0; //返回状态 成功
-    public static final Integer RESULT_STATUS_FAIL = 1; //返回状态 失败
-    public static final Integer RESULT_STATUS_ERROR = 2; //返回状态 程序出错
-
-
-    //返回说明
-    public static final String RESULT_MESSAGE_SUCCESS = "操作成功！";
-    public static final String RESULT_MESSAGE_FAIL = "操作失败！";
-    public static final String RESULT_MESSAGE_ERROR = "程序出错！";
-
-
-
-    /**
-     * 地图坐标系标识
-     */
-    public static final String WGS84 = "wgs84";
-    public static final String BD09 = "bd09";
-    public static final String GCJ02 = "gcj02";
-    public static final String CGCS2000 = "cgcs2000";
-
-
 
     //航行状态
     public static Map<String, String> shipStatusMap = new HashMap<>();
@@ -101,16 +79,30 @@ public class Constants {
     }
 
 
-
     //AIS设备类型
     public static Map<String, String> aisStatusMap = new HashMap<>();
     static {
         aisStatusMap.put("0", "CLASS-A");
-        aisStatusMap.put("1", "CLASS-B ");
+        aisStatusMap.put("1", "CLASS-B");
         aisStatusMap.put("2", "基站");
         aisStatusMap.put("3", "航标");
         aisStatusMap.put("4", "搜救直升机");
         aisStatusMap.put("5", "SART搜救应答器");
     }
+
+
+    // CORS 高精度用户 GGA的最新解算状态
+    public static Map<String, String> corsGgaMap = new HashMap<>();
+    static {
+        corsGgaMap.put("0", "无效解");
+        corsGgaMap.put("1", "单点解");
+        corsGgaMap.put("2", "差分3D");
+        corsGgaMap.put("3", "PPP");
+        corsGgaMap.put("4", "固定解");
+        corsGgaMap.put("5", "浮点解");
+        corsGgaMap.put("6", "差分WASS");
+        corsGgaMap.put("7", "基站");
+    }
+
 
 }

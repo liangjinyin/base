@@ -1,4 +1,4 @@
-package com.kaiwen.base.modles.websocket;
+package com.kaiwen.base.modles.websocket.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

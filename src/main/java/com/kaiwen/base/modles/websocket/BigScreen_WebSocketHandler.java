@@ -81,6 +81,7 @@ public class BigScreen_WebSocketHandler implements WebSocketHandler {
             session.close();
         }
         log.info("WebSocketSession 连接出错...");
+        log.info("WebSocketSession 异常信息：{}" ,exception.getMessage());
         if (!CollectionUtils.isEmpty(list)) {
             list.remove(session);
         }

@@ -1,6 +1,7 @@
-package com.kaiwen.base.modles.websocket;
+package com.kaiwen.base.modles.websocket.config;
 
 
+import com.kaiwen.base.modles.websocket.BigScreen_WebSocketHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;

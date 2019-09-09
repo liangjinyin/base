@@ -1,17 +1,18 @@
-package com.kaiwen.base.modles.websocket;
+package com.kaiwen.base.modles.websocket.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.kaiwen.base.modles.websocket.common.Constants;
+import com.kaiwen.base.modles.websocket.service.AisService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Service
-public class AisServiceImpl {
+public class AisServiceImpl implements AisService {
 
 
+    @Override
     public JSONObject aisShipParser(String message) {
         String[] split = message.split(",");
         if (split.length == 21 && split[0].equals("$AISORG")) {
@@ -24,9 +25,10 @@ public class AisServiceImpl {
             jsonObject.put("devicetype", split[5]); //AIS设备类型编码
             //AIS设备类型 中文说明
             String devicetypeString = Constants.aisStatusMap.get(split[5]);
-            jsonObject.put("devicetypeString", StringUtils.isEmpty(devicetypeString) ? "未定义" : devicetypeString); //AIS设备类型
+            jsonObject.put("devicetypeString", StringUtils.isEmpty(devicetypeString) ? "未定义" : devicetypeString);
 
-            jsonObject.put("status", Constants.shipStatusMap.get(split[6])); //航行状态
+            jsonObject.put("status", split[6]); //航行状态
+            jsonObject.put("statusString", Constants.shipStatusMap.get(split[6]));
             jsonObject.put("speed", split[7]); //对地航速
             jsonObject.put("course", split[8]); //对地航向
 
@@ -48,8 +50,9 @@ public class AisServiceImpl {
             jsonObject.put("shipwidth", split[13]); //船宽
 
             //船货类型
-            String cargotype = Constants.shipTypeMap.get(split[14]);
-            jsonObject.put("cargotype", StringUtils.isEmpty(cargotype) ? "未定义" : cargotype);
+            jsonObject.put("cargotype", split[14]);
+            String cargotypeString = Constants.shipTypeMap.get(split[14]);
+            jsonObject.put("cargotypeString", StringUtils.isEmpty(cargotypeString) ? "未定义" : cargotypeString);
 
             // 转换时间格式 07-12/15:32 --> 2019-07-12 15:32
             String expectarrivetime = null;
@@ -69,27 +72,26 @@ public class AisServiceImpl {
             jsonObject.put("shippeople", split[18]); //船载人数
 
             // 转换转向率 +165.0 --> 右转165.0
-            String turnrate = null;
+            String turnrateString = null;
             if (!StringUtils.isEmpty(split[19])) {
                 String sub1 = split[19].substring(0, 1);
                 String sub2 = split[19].substring(1);
 
-                turnrate = ("+".equals(sub1) ? "右转" : "左转") + sub2 + "度";
+                turnrateString = ("+".equals(sub1) ? "右转" : "左转") + sub2 + "度";
             }
-            jsonObject.put("turnrate", turnrate); //转向率
+            jsonObject.put("turnrate", split[19]); //转向率
+            jsonObject.put("turnrateString", turnrateString);
 
             //电子定位设备类型
-            String elecequipment = null;
+            String positionType = null;
             if (!StringUtils.isEmpty(split[20])) {
-                jsonObject.put("locatetype", split[20]);
                 if (Integer.valueOf(split[20]) >= 9 && Integer.valueOf(split[20]) <= 14) {
-                    elecequipment = "bd";
+                    positionType = "bd";
                 }else{
-                    elecequipment = "others";
+                    positionType = "others";
                 }
             }
-            jsonObject.put("elecequipment", elecequipment); //电子定位设备类型
-            jsonObject.put("dateTime", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))); //记录时间
+            jsonObject.put("positionType", positionType);
 
             return jsonObject;
         }

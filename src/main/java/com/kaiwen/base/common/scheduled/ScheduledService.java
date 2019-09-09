@@ -33,7 +33,7 @@ public class ScheduledService {
         log.info("=====>>>>>fixedDelay{}",System.currentTimeMillis());
     }*/
 
-    @Scheduled(cron = "0 0/15 * * * ?")
+    //@Scheduled(cron = "0 0/15 * * * ?")
     public void scheduled(){
         Object date = feignClient.findMls();
 

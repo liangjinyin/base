@@ -8,4 +8,5 @@ import org.springframework.beans.BeanUtils;
  * @Description: 用于update
  */
 public class MyBeanUtils extends BeanUtils {
+    // String join = String.join(",", aisStationIdList);
 }

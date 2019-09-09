@@ -1,0 +1,67 @@
+
+--建立分区 4个
+CREATE TABLE ais_ship_temp_1 () inherits (ais_ship_temp);
+CREATE TABLE ais_ship_temp_2 () inherits (ais_ship_temp);
+CREATE TABLE ais_ship_temp_3 () inherits (ais_ship_temp);
+CREATE TABLE ais_ship_temp_4 () inherits (ais_ship_temp);
+
+
+#限制
+ALTER TABLE ais_ship_temp_1
+  ADD CONSTRAINT ais_ship_temp_1_zone_key
+    CHECK (zonedb = '1'::VARCHAR);
+
+ALTER TABLE ais_ship_temp_2
+  ADD CONSTRAINT ais_ship_temp_2_zone_key
+    CHECK (zonedb = '2'::VARCHAR);
+
+ALTER TABLE ais_ship_temp_3
+  ADD CONSTRAINT ais_ship_temp_3_zone_key
+    CHECK (zonedb = '3'::VARCHAR);
+
+ALTER TABLE ais_ship_temp_4
+  ADD CONSTRAINT ais_ship_temp_4_zone_key
+    CHECK (zonedb = '4'::VARCHAR);
+
+# 索引
+CREATE INDEX ais_ship_temp_1_db_key
+  ON ais_ship_temp_1 (zonedb);
+
+CREATE INDEX ais_ship_temp_2_db_key
+  ON ais_ship_temp_2 (zonedb);
+
+CREATE INDEX ais_ship_temp_3_db_key
+  ON ais_ship_temp_3 (zonedb);
+
+CREATE INDEX ais_ship_temp_4_db_key
+  ON ais_ship_temp_4 (zonedb);
+
+#
+--创建分区函数
+CREATE OR REPLACE FUNCTION ais_ship_temp_partition_trigger()
+            RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.zonedb = VARCHAR '1'
+    THEN
+INSERT INTO ais_ship_temp_1 VALUES (NEW.*);
+ELSIF NEW.zonedb = VARCHAR '2'
+    THEN
+INSERT INTO ais_ship_temp_2 VALUES (NEW.*);
+ELSIF NEW.zonedb = VARCHAR '3'
+    THEN
+INSERT INTO ais_ship_temp_3 VALUES (NEW.*);
+ELSIF NEW.zonedb = VARCHAR '4'
+    THEN
+INSERT INTO ais_ship_temp_4 VALUES (NEW.*);
+END IF;
+RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+--挂载分区Trigger
+CREATE TRIGGER insert_ais_ship_temp_partition_trigger
+  BEFORE INSERT ON ais_ship_temp
+  FOR EACH ROW EXECUTE PROCEDURE ais_ship_temp_partition_trigger();
+
+-- 删除触发器.
+DROP TRIGGER insert_ais_ship_temp_partition_trigger ON ais_ship_temp ;
