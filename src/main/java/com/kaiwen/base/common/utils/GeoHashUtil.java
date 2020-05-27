@@ -13,12 +13,12 @@ import org.locationtech.spatial4j.shape.Point;
  */
 public class GeoHashUtil {
     public static String encode(double latitude, double longitude, int precision){
-        return GeohashUtils.encodeLatLon(latitude,longitude,precision);
+        return MyGeohashUtils.encodeLatLon(latitude,longitude,precision);
     }
 
     public static Double[] decode(String geohast){
         SpatialContext ctx = SpatialContext.GEO;
-        Point point = GeohashUtils.decode(geohast, ctx);
+        Point point = MyGeohashUtils.decode(geohast, ctx);
         return new Double[]{point.getX(),point.getY()};
     }
     /*public static Double getDistance(){

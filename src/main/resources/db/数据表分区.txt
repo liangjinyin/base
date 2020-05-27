@@ -65,3 +65,45 @@ CREATE TRIGGER insert_ais_ship_temp_partition_trigger
 
 -- 删除触发器.
 DROP TRIGGER insert_ais_ship_temp_partition_trigger ON ais_ship_temp ;
+
+--查询
+(SELECT mmsi,zonedb FROM ais_ship_temp_1 LIMIT 300)
+UNION
+(SELECT mmsi,zonedb FROM ais_ship_temp_2 LIMIT 300)
+UNION
+(SELECT mmsi,zonedb FROM ais_ship_temp_3 LIMIT 300)
+UNION
+(SELECT mmsi,zonedb FROM ais_ship_temp_4 LIMIT 300)
+
+--AIS船舶表
+create table AIS_SHIP (
+	gid                             VARCHAR(36)          not null default uuid_generate_v4(),
+	mmsi                            VARCHAR(128)          null,
+	imo                             VARCHAR(50)         null,
+	shipname												VARCHAR(50)         null,
+	callsign											VARCHAR(50)         null,
+	devicetype											VARCHAR(50)         null,
+	devicetypestring											VARCHAR(50)         null,
+	status                 int4                null,
+	statusstring            VARCHAR(32)         null,
+	speed                     NUMERIC(50,20)       null,
+	course                     NUMERIC(50,20)       null,
+	heading                     NUMERIC(50,20)       null,
+	longitude                     NUMERIC(50,20)       null,
+	latitude											NUMERIC(50,20)       null,
+	shipwidth											NUMERIC(50,20)       null,
+	shiplength											NUMERIC(50,20)       null,
+	cargotype                int4                null,
+	cargotypeString            VARCHAR(32)         null,
+	expectarrivetime            VARCHAR(32)         null,
+	maxdraftdepth            VARCHAR(32)         null,
+	positiontype            VARCHAR(32)         null,
+	destination            VARCHAR(64)         null,
+	shippeople            VARCHAR(32)         null,
+	turnrate                 VARCHAR(32)         null,
+	turnrateString            VARCHAR(32)         null,
+	receivetime                  timestamp(4)     with time zone null,
+	lauptime                    timestamp(4)     with time zone null,
+	geom_cgcs2000             geometry               null,
+	constraint AIS_SHIP_PK primary key (gid)
+);

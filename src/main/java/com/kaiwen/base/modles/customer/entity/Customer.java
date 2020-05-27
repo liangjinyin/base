@@ -3,6 +3,7 @@ package com.kaiwen.base.modles.customer.entity;
 import com.kaiwen.base.common.modle.entity.BaseEntity;
 import com.kaiwen.base.common.utils.excel.ExcelField;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,6 +14,7 @@ import java.io.Serializable;
  * @Date: 2018-08-30
  * @Description:
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Table(name = "sys_customer")
@@ -21,11 +23,14 @@ public class Customer extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ExcelField(title = "id", sort = 1)
+    @Column(name = "id")
     private Integer id;
     @NotBlank(message = "客户名称不可为空！")
     @ExcelField(title = "名称", sort = 2)
+    @Column(name = "name")
     private String name;
     @ExcelField(title = "地址", sort = 3)
+    @Column(name = "address")
     private String address;
     @ExcelField(title = "电话", sort = 4)
     @Column(name = "phone")

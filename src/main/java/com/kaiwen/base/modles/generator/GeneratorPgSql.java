@@ -19,36 +19,90 @@ public class GeneratorPgSql {
         );
 
         //数据库字段
-        String str = "      \"id\" varchar(64) COLLATE \"pg_catalog\".\"default\" NOT NULL,\n" +
-                "  \"geom_cgcs2000\" \"public\".\"geometry\",\n" +
-                "  \"gwonlinestatus\" varchar(255) COLLATE \"pg_catalog\".\"default\",\n" +
-                "  \"latitude\" float8,\n" +
-                "  \"lauptime\" timestamp(6),\n" +
-                "  \"longitude\" float8,\n" +
-                "  \"stationid\" varchar(255) COLLATE \"pg_catalog\".\"default\",\n" +
-                "  \"stationname\" varchar(255) COLLATE \"pg_catalog\".\"default\",\n" +
-                "  \"stationtype\" varchar(255) COLLATE \"pg_catalog\".\"default\",\n" +
-                "  \"userid\" varchar(255) COLLATE \"pg_catalog\".\"default\",";
+        String str = "  \"gid\" varchar(36) COLLATE \"pg_catalog\".\"default\" NOT NULL DEFAULT uuid_generate_v4(),\n" +
+                "  \"mmsi\" varchar(128) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"imo\" varchar(50) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"shipname\" varchar(50) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"callsign\" varchar(50) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"devicetype\" varchar(50) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"devicetypestring\" varchar(50) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"status\" int4,\n" +
+                "  \"statusstring\" varchar(32) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"speed\" numeric(50,20),\n" +
+                "  \"course\" numeric(50,20),\n" +
+                "  \"heading\" numeric(50,20),\n" +
+                "  \"longitude\" numeric(50,20),\n" +
+                "  \"latitude\" numeric(50,20),\n" +
+                "  \"shipwidth\" numeric(50,20),\n" +
+                "  \"shiplength\" numeric(50,20),\n" +
+                "  \"cargotype\" int4,\n" +
+                "  \"cargotypestring\" varchar(32) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"expectarrivetime\" varchar(32) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"maxdraftdepth\" varchar(32) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"positiontype\" varchar(32) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"destination\" varchar(64) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"shippeople\" varchar(32) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"turnrate\" varchar(32) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"turnratestring\" varchar(32) COLLATE \"pg_catalog\".\"default\",\n" +
+                "  \"receivetime\" timestamptz(4),\n" +
+                "  \"lauptime\" timestamptz(4),\n" +
+                "  \"geom_cgcs2000\" \"public\".\"geometry\",   ";
 
-        String comment = " COMMENT ON COLUMN \"public\".\"base_station\".\"id\" IS 'id';\n" +
+        String comment = "COMMENT ON COLUMN \"public\".\"ais_ship\".\"gid\" IS 'id';\n" +
                 "\n" +
-                "COMMENT ON COLUMN \"public\".\"base_station\".\"geom_cgcs2000\" IS '图形2000';\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"mmsi\" IS '船舶唯一标识';\n" +
                 "\n" +
-                "COMMENT ON COLUMN \"public\".\"base_station\".\"gwonlinestatus\" IS '站点状态（0离线 1在线）';\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"imo\" IS 'IMO编号';\n" +
                 "\n" +
-                "COMMENT ON COLUMN \"public\".\"base_station\".\"latitude\" IS '纬度';\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"shipname\" IS '船舶名称';\n" +
                 "\n" +
-                "COMMENT ON COLUMN \"public\".\"base_station\".\"lauptime\" IS '操作时间';\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"callsign\" IS '呼号';\n" +
                 "\n" +
-                "COMMENT ON COLUMN \"public\".\"base_station\".\"longitude\" IS '经度';\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"devicetype\" IS 'AIS设备类型编码';\n" +
                 "\n" +
-                "COMMENT ON COLUMN \"public\".\"base_station\".\"stationid\" IS '站点ID';\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"devicetypestring\" IS 'AIS设备类型';\n" +
                 "\n" +
-                "COMMENT ON COLUMN \"public\".\"base_station\".\"stationname\" IS '站点名称';\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"status\" IS '状态编码';\n" +
                 "\n" +
-                "COMMENT ON COLUMN \"public\".\"base_station\".\"stationtype\" IS '站点类型：01--CORS基站 / 02--AIS基站';\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"statusstring\" IS '状态';\n" +
                 "\n" +
-                "COMMENT ON COLUMN \"public\".\"base_station\".\"userid\" IS '操作人id';";
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"speed\" IS '航速';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"course\" IS '对地航向';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"heading\" IS '艏向';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"longitude\" IS '经度';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"latitude\" IS '纬度';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"shipwidth\" IS '船宽';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"shiplength\" IS '船长';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"cargotype\" IS '船货类型编码';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"cargotypestring\" IS '船货类型';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"expectarrivetime\" IS '预计到达时间';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"maxdraftdepth\" IS '最大吃水深度';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"positiontype\" IS '定位类型';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"destination\" IS '目的地';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"shippeople\" IS '船载人数';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"turnrate\" IS '转向率编码';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"turnratestring\" IS '转向率';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"receivetime\" IS '接收时间';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"lauptime\" IS '更新时间';\n" +
+                "\n" +
+                "COMMENT ON COLUMN \"public\".\"ais_ship\".\"geom_cgcs2000\" IS '图形2000';";
         comment = comment.replaceAll("/r|/n", "");
 
         String[] split1 = comment.trim().split("\\\n");

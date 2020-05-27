@@ -248,4 +248,56 @@ public class RedisOperateUtil {
         return null;
     }
 
+
+    /**
+     * redis中的数据  根据精确keys 批量删除
+     */
+    public List<Object> getRedisData(Set<String> keys) throws Exception{
+        if(!CollectionUtils.isEmpty(keys)){
+            Jedis jedis = null;
+            Pipeline pl = null;//管道
+            try {
+                if(jedisPool==null){
+                    return null;
+                }
+                List<Object> content = new ArrayList<>();
+                jedis = jedisPool.getResource();
+                pl = jedis.pipelined();
+
+                if (keys.size() > 0) {
+                    Set<String> temp = new HashSet<>();
+                    for (String key : keys) {
+                        Response<Set<String>> keysResponse = pl.keys(key);
+                        pl.sync();
+                        if (keysResponse != null) {
+                            Set<String> strings = keysResponse.get();
+                            if(strings.iterator().hasNext()){
+                                String next = strings.iterator().next();
+                                temp.add(next);
+                            }
+                        }
+                    }
+                    //temp1 = pl.syncAndReturnAll();
+                    if (temp.size() > 0) {
+                        for (String key : temp) {
+                            pl.get(key);
+                        }
+                        content = pl.syncAndReturnAll();
+                    }
+                }
+                if (!CollectionUtils.isEmpty(content)) {
+                    return content;
+                }
+
+            } finally {
+                if (jedis != null) {
+                    jedis.close();
+                }
+                if (pl != null) {
+                    pl.close();
+                }
+            }
+        }
+        return null;
+    }
 }

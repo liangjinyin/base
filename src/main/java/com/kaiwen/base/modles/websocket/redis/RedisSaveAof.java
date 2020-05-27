@@ -1,9 +1,13 @@
 package com.kaiwen.base.modles.websocket.redis;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.kaiwen.base.common.enums.ResultCode;
 import com.kaiwen.base.common.modle.controller.BaseController;
+import com.kaiwen.base.common.utils.GeometryUtil;
 import com.kaiwen.base.common.utils.RedisOperateUtil;
+import com.kaiwen.base.modles.ship.entity.Ship;
+import com.kaiwen.base.modles.websocket.utils.PointUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,23 +109,65 @@ public class RedisSaveAof extends BaseController {
     // 测试redis GEOHASH算法
     @GetMapping("/hash")
     public String testHash()throws Exception{
-        List<Object> objectList = redisOperateUtil.getDataFromRedis("AIS:*");
+
+
+        // 114.23268127441406 30.672317505930554,114.13490297924727 30.535675044637177,114.36067201383412 30.477310176473114,114.57875061035156 30.669570923899304,114.23268127441406 30.672317505930554
+        double[] middlePoint = GeometryUtil.getMiddlePoint(114.36067201383412d, 30.672317505930554d, 114.23268127441406, 30.477310176473114);
+
+        double distance = GeometryUtil.getDistance(114.36067201383412d, 30.672317505930554d, 114.23268127441406, 30.477310176473114);
+
+        if(middlePoint != null){
+            GeoResults<RedisGeoCommands.GeoLocation<Object>> rangeDistance = getRangeDistance(middlePoint[0], middlePoint[1], distance, 100);
+            List<GeoResult<RedisGeoCommands.GeoLocation<Object>>> content = rangeDistance.getContent();
+            Set<String> set = new HashSet<>();
+            content.forEach(e->{
+                RedisGeoCommands.GeoLocation<Object> content1 = e.getContent();
+                String name = (String)content1.getName();
+                //Object o = redisTemplate.opsForValue().get(name);
+                //redisOperateUtil.getOneDataFromRedis()
+                set.add("AIS:"+name+"*");
+                //String oneDataFromRedis = redisOperateUtil.getOneDataFromRedis("AIS:" + name + "*");
+
+            });
+            //set.forEach(e);
+            /*List<Object> redisData = redisOperateUtil.getRedisData(set);
+            List<Ship> ships = JSONArray.parseArray(redisData.toString(), Ship.class);
+            data = ships;
+            System.out.println(redisData.toString());*/
+        }
+
+
+
+       /* List<Object> objectList = redisOperateUtil.getDataFromRedis("AIS:*");
         Map<String, Integer> map = new HashMap<>();
         objectList.forEach(e -> {
             JSONObject jsonObject = JSONObject.parseObject(e.toString());
-            Point point = new Point(jsonObject.getDouble("longitude"), jsonObject.getDouble("latitude"));
-            String value = jsonObject.getString("mmsi");
-            //Long shipname = redisTemplate.opsForGeo().add("shipGeo", point, value);
-        });
-        //redisTemplate.opsForGeo().hash();
-        Set<String> pointSet = new HashSet<>();
+            Double longitude = jsonObject.getDouble("longitude");
+            Double latitude = jsonObject.getDouble("latitude");
+            if(longitude <135 && latitude < 53 && longitude > 73 && latitude > 4){
+                Point point = new Point(longitude, latitude);
+                String value = jsonObject.getString("mmsi");
+                //redisTemplate.opsForSet().add("shipsetkey", value);
 
-        Distance distance = new Distance(5, Metrics.KILOMETERS);// 5 公里
+                //redisTemplate.opsForGeo().add("shipGeo", point, value);
+            }
+        });*/
+
+       /* Set<Object> shipsetkey = redisTemplate.opsForSet().members("shipsetkey");
+        Set<String> set = new HashSet<>();
+        shipsetkey.forEach(e->{
+            GeoResults<RedisGeoCommands.GeoLocation<Object>> rangeDistanceByMember = getRangeDistanceByMember(e.toString(), distance, 100);
+            List<GeoResult<RedisGeoCommands.GeoLocation<Object>>> content = rangeDistanceByMember.getContent();
+
+        });*/
+
+
+        /*Distance distance = new Distance(5, Metrics.KILOMETERS);// 5 公里
         RedisGeoCommands.GeoRadiusCommandArgs args = RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().includeDistance().includeCoordinates().sortAscending().limit(5);
         GeoResults<RedisGeoCommands.GeoLocation<Object>> results = redisTemplate.opsForGeo().radius("shipGeo","413788092",distance,args);
-        List<GeoResult<RedisGeoCommands.GeoLocation<Object>>> content = results.getContent();
+        List<GeoResult<RedisGeoCommands.GeoLocation<Object>>> content = results.getContent();*/
 
-        System.out.println(content);
+        //System.out.println(content);
 
         return result();
     }
@@ -129,7 +175,7 @@ public class RedisSaveAof extends BaseController {
     // 根据给定成员获取指定范围内的地理位置集合
     public GeoResults<RedisGeoCommands.GeoLocation<Object>> getRangeDistanceByMember(String member, Double range, int count) {
 
-        BoundGeoOperations<String, Object> boundGeoOps = redisTemplate.boundGeoOps("");
+        BoundGeoOperations<String, Object> boundGeoOps = redisTemplate.boundGeoOps("shipGeo");
         GeoResults<RedisGeoCommands.GeoLocation<Object>> geoResults = boundGeoOps.radius(member, new Distance(range, Metrics.KILOMETERS), RedisGeoCommands.GeoRadiusCommandArgs.newGeoRadiusArgs().sortDescending().limit(count));
         return geoResults;
 
